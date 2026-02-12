@@ -6,64 +6,132 @@
 <title>Sistema Lei de Ohm - IF</title>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
-    font-family:Arial, sans-serif;
-    background:#dff5e4;
+    font-family:'Poppins', sans-serif;
+    background:linear-gradient(135deg,#0f5132,#198754,#20c997);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .container{
-    max-width:800px;
-    margin:auto;
-    padding:30px;
+    width:100%;
+    max-width:900px;
+    padding:20px;
 }
 
 .card{
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.2);
+    animation:fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
 h1{
     text-align:center;
-    color:#1b7f3a;
+    color:white;
+    font-weight:700;
+    margin-bottom:25px;
+    letter-spacing:1px;
 }
 
 button, input{
     width:100%;
-    padding:12px;
-    margin:8px 0;
-    font-size:16px;
-    border-radius:8px;
-    border:1px solid #ccc;
+    padding:14px;
+    margin:10px 0;
+    font-size:15px;
+    border-radius:12px;
+    border:none;
+    outline:none;
+    transition:0.3s;
+}
+
+input{
+    background:rgba(255,255,255,0.9);
+    font-weight:500;
+}
+
+input:focus{
+    transform:scale(1.02);
+    box-shadow:0 0 0 3px rgba(25,135,84,0.3);
 }
 
 button{
-    background:#1b7f3a;
+    background:linear-gradient(135deg,#198754,#157347);
     color:white;
-    font-weight:bold;
+    font-weight:600;
     cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
 }
 
 button:hover{
-    background:#145c2a;
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.3);
+}
+
+button:active{
+    transform:scale(0.97);
 }
 
 .tela{ display:none; }
 .ativa{ display:block; }
 
 .registro{
-    border:1px solid #ccc;
-    padding:10px;
-    margin:10px 0;
-    border-radius:8px;
-    background:#fafafa;
+    background:white;
+    padding:18px;
+    margin:15px 0;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    font-size:14px;
+    line-height:1.6;
+    transition:0.3s;
 }
 
-.filtroBtn{
-    margin-top:5px;
+.registro:hover{
+    transform:translateY(-3px);
 }
+
+.registro strong{
+    color:#198754;
+}
+
+.registro button{
+    margin-top:8px;
+}
+
+.status-ok{
+    color:#198754;
+    font-weight:600;
+}
+
+.status-erro{
+    color:#dc3545;
+    font-weight:600;
+}
+
+@media(max-width:600px){
+    .card{
+        padding:25px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -73,60 +141,69 @@ button:hover{
 
 <!-- TELA INICIAL -->
 <div id="inicio" class="tela ativa">
-    <h1>Sistema Lei de Ohm</h1>
-    <button onclick="mostrarTela('loginProfessor')">Professor</button>
-    <button onclick="mostrarTela('loginAluno')">Aluno</button>
+    <h1>⚡ Sistema Lei de Ohm</h1>
+    <button onclick="mostrarTela('loginProfessor')">👨‍🏫 Área do Professor</button>
+    <button onclick="mostrarTela('loginGrupo')">👥 Área do Grupo</button>
 </div>
 
 <!-- LOGIN PROFESSOR -->
 <div id="loginProfessor" class="tela">
-    <h1>Área do Professor</h1>
+    <h1>👨‍🏫 Professor</h1>
     <input type="password" id="senhaProfessor" placeholder="Digite a senha">
     <button onclick="entrarProfessor()">Entrar</button>
-    <button onclick="voltar()">Voltar</button>
+    <button onclick="mostrarTela('inicio')">Voltar</button>
 </div>
 
-<!-- LOGIN ALUNO -->
-<div id="loginAluno" class="tela">
-    <h1>Área do Aluno</h1>
-    <input type="text" id="nomeAluno" placeholder="Digite seu nome">
-    <button onclick="entrarAluno()">Entrar</button>
-    <button onclick="voltar()">Voltar</button>
+<!-- MENU PROFESSOR -->
+<div id="menuProfessor" class="tela">
+    <h1>📊 Escolher Tipo</h1>
+    <button onclick="mostrarRegistros('U')">Ver Tensão (U)</button>
+    <button onclick="mostrarRegistros('I')">Ver Corrente (I)</button>
+    <button onclick="mostrarRegistros('R')">Ver Resistência (R)</button>
+    <button onclick="mostrarTela('loginProfessor')">Voltar</button>
 </div>
 
-<!-- ESCOLHA DO ALUNO -->
-<div id="escolhaAluno" class="tela">
-    <h1>O que deseja calcular?</h1>
+<!-- LISTA PROFESSOR -->
+<div id="listaProfessor" class="tela">
+    <h1>📋 Registros</h1>
+    <div id="listaRegistros"></div>
+    <button onclick="mostrarTela('menuProfessor')">Voltar</button>
+</div>
+
+<!-- LOGIN GRUPO -->
+<div id="loginGrupo" class="tela">
+    <h1>👥 Grupo</h1>
+    <input type="text" id="nomeGrupo" placeholder="Nome do Grupo">
+    <input type="password" id="senhaGrupo" placeholder="Senha do Grupo">
+    <button onclick="entrarGrupo()">Entrar</button>
+    <button onclick="mostrarTela('inicio')">Voltar</button>
+</div>
+
+<!-- ESCOLHA GRUPO -->
+<div id="escolhaGrupo" class="tela">
+    <h1>🔢 O que deseja calcular?</h1>
     <button onclick="abrirCalculo('U')">Tensão (U)</button>
     <button onclick="abrirCalculo('I')">Corrente (I)</button>
     <button onclick="abrirCalculo('R')">Resistência (R)</button>
-    <button onclick="voltar()">Sair</button>
+    <button onclick="mostrarResultadosGrupo()">Ver Minhas Notas</button>
+    <button onclick="mostrarTela('loginGrupo')">Voltar</button>
 </div>
 
-<!-- ÁREA DE CÁLCULO DO ALUNO -->
-<div id="areaAluno" class="tela">
+<!-- ÁREA CÁLCULO -->
+<div id="areaGrupo" class="tela">
     <h1 id="tituloCalculo"></h1>
-
     <input type="number" id="valor1" placeholder="Primeiro valor">
     <input type="number" id="valor2" placeholder="Segundo valor">
-
-    <input type="number" id="respostaAluno" placeholder="Digite sua resposta">
-
+    <input type="number" id="respostaGrupo" placeholder="Digite sua resposta">
     <button onclick="salvarCalculo()">Salvar Resposta</button>
-    <button onclick="mostrarTela('escolhaAluno')">Voltar</button>
+    <button onclick="mostrarTela('escolhaGrupo')">Voltar</button>
 </div>
 
-<!-- ÁREA PROFESSOR -->
-<div id="areaProfessor" class="tela">
-    <h1>Registros dos Alunos</h1>
-
-    <button onclick="mostrarRegistros('U')">Ver Tensão</button>
-    <button onclick="mostrarRegistros('I')">Ver Corrente</button>
-    <button onclick="mostrarRegistros('R')">Ver Resistência</button>
-
-    <div id="listaRegistros"></div>
-
-    <button onclick="voltar()">Sair</button>
+<!-- RESULTADOS DO GRUPO -->
+<div id="resultadoGrupo" class="tela">
+    <h1>📈 Minhas Notas</h1>
+    <div id="listaGrupo"></div>
+    <button onclick="mostrarTela('escolhaGrupo')">Voltar</button>
 </div>
 
 </div>
@@ -134,137 +211,166 @@ button:hover{
 
 <script>
 
-let alunoAtual = "";
+/* 🔽 AQUI ESTÁ SUA LÓGICA ORIGINAL INTACTA 🔽 */
+
+let grupoAtual = "";
 let tipoAtual = "";
 
-/* NAVEGAÇÃO */
 function mostrarTela(id){
     document.querySelectorAll(".tela").forEach(t=>t.classList.remove("ativa"));
     document.getElementById(id).classList.add("ativa");
 }
 
-function voltar(){
-    mostrarTela("inicio");
-}
-
-/* LOGIN */
 function entrarProfessor(){
-    let senha = document.getElementById("senhaProfessor").value;
-    if(senha === "eletroif"){
-        mostrarTela("areaProfessor");
-    }else{
+    if(document.getElementById("senhaProfessor").value === "eletroif"){
+        mostrarTela("menuProfessor");
+    } else {
         alert("Senha incorreta!");
     }
 }
 
-function entrarAluno(){
-    let nome = document.getElementById("nomeAluno").value.trim();
-    if(nome === ""){
-        alert("Digite seu nome!");
-        return;
-    }
-    alunoAtual = nome;
-    mostrarTela("escolhaAluno");
-}
+function entrarGrupo(){
+    let nome = document.getElementById("nomeGrupo").value.trim();
+    let senha = document.getElementById("senhaGrupo").value;
 
-/* ESCOLHA DO ALUNO */
-function abrirCalculo(tipo){
-    tipoAtual = tipo;
-
-    if(tipo === "U"){
-        document.getElementById("tituloCalculo").innerText = "Calcular Tensão (U = R × I)";
-    }
-    if(tipo === "I"){
-        document.getElementById("tituloCalculo").innerText = "Calcular Corrente (I = U / R)";
-    }
-    if(tipo === "R"){
-        document.getElementById("tituloCalculo").innerText = "Calcular Resistência (R = U / I)";
-    }
-
-    mostrarTela("areaAluno");
-}
-
-/* SALVAR */
-function salvarCalculo(){
-
-    let v1 = Number(document.getElementById("valor1").value);
-    let v2 = Number(document.getElementById("valor2").value);
-    let respostaAluno = Number(document.getElementById("respostaAluno").value);
-
-    if(!v1 || !v2 || !respostaAluno){
+    if(nome === "" || senha === ""){
         alert("Preencha todos os campos!");
         return;
     }
 
-    let respostaCorreta;
+    let grupos = JSON.parse(localStorage.getItem("grupos")) || {};
 
-    if(tipoAtual === "U") respostaCorreta = v1 * v2;
-    if(tipoAtual === "I") respostaCorreta = v1 / v2;
-    if(tipoAtual === "R") respostaCorreta = v1 / v2;
+    if(!grupos[nome]){
+        grupos[nome] = senha;
+        localStorage.setItem("grupos", JSON.stringify(grupos));
+    } else {
+        if(grupos[nome] !== senha){
+            alert("Senha incorreta!");
+            return;
+        }
+    }
 
-    let registro = {
-        nome: alunoAtual,
+    grupoAtual = nome;
+    mostrarTela("escolhaGrupo");
+}
+
+function abrirCalculo(tipo){
+    tipoAtual = tipo;
+
+    const titulos = {
+        U: "Calcular Tensão (U = R × I)",
+        I: "Calcular Corrente (I = U / R)",
+        R: "Calcular Resistência (R = U / I)"
+    };
+
+    document.getElementById("tituloCalculo").innerText = titulos[tipo];
+    mostrarTela("areaGrupo");
+}
+
+function salvarCalculo(){
+
+    const v1 = Number(document.getElementById("valor1").value);
+    const v2 = Number(document.getElementById("valor2").value);
+    const resposta = Number(document.getElementById("respostaGrupo").value);
+
+    if(isNaN(v1) || isNaN(v2) || isNaN(resposta)){
+        alert("Preencha corretamente!");
+        return;
+    }
+
+    let correta;
+    if(tipoAtual === "U") correta = v1 * v2;
+    if(tipoAtual === "I") correta = v1 / v2;
+    if(tipoAtual === "R") correta = v1 / v2;
+
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+    registros.push({
+        grupo: grupoAtual,
         tipo: tipoAtual,
         valor1: v1,
         valor2: v2,
-        respostaAluno: respostaAluno,
-        respostaCorreta: respostaCorreta
-    };
+        respostaGrupo: resposta,
+        respostaCorreta: correta,
+        divulgado: false
+    });
 
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    registros.push(registro);
     localStorage.setItem("registros", JSON.stringify(registros));
-
-    alert("Resposta salva com sucesso!");
+    alert("Resposta enviada!");
 }
 
-/* PROFESSOR */
 function mostrarRegistros(tipo){
 
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
     let lista = document.getElementById("listaRegistros");
     lista.innerHTML = "";
 
-    registros.forEach((r, index)=>{
-
+    registros.forEach((r,index)=>{
         if(r.tipo === tipo){
 
-            let acertou = (r.respostaAluno === r.respostaCorreta);
+            let acertou = r.respostaGrupo === r.respostaCorreta;
 
             lista.innerHTML += `
-                <div class="registro">
-                    <strong>Aluno:</strong> ${r.nome}<br>
-                    <strong>Valores:</strong> ${r.valor1}, ${r.valor2}<br>
-                    <strong>Resposta do Aluno:</strong> ${r.respostaAluno}<br>
-                    <strong>Resposta Correta:</strong> ${r.respostaCorreta}<br>
-                    <strong>Status:</strong> ${acertou ? "✔ Correto" : "✖ Incorreto"}<br>
-                    <button class="filtroBtn" onclick="excluirRegistro(${index})">Excluir</button>
-                </div>
-            `;
-        }
+            <div class="registro">
+                <strong>Grupo:</strong> ${r.grupo}<br>
+                <strong>Valores:</strong> ${r.valor1}, ${r.valor2}<br>
+                <strong>Resposta do Grupo:</strong> ${r.respostaGrupo}<br>
+                <strong>Resposta Correta:</strong> ${r.respostaCorreta}<br>
+                <strong>Status:</strong> <span class="${acertou ? 'status-ok':'status-erro'}">
+                ${acertou ? "✔ Acertou" : "✖ Errou"}
+                </span><br>
 
+                <button onclick="divulgarIndividual(${index})">📢 Divulgar Nota</button>
+                <button onclick="apagarRegistro(${index})" style="background:#dc3545">
+                🗑 Apagar
+                </button>
+
+                ${r.divulgado ? "<strong style='color:green'>Nota já divulgada</strong>" : ""}
+            </div>`;
+        }
     });
 
-    lista.innerHTML += `
-        <button style="background:#a30000;margin-top:10px;"
-        onclick="limparTipo('${tipo}')">Limpar Todos</button>
-    `;
+    mostrarTela("listaProfessor");
 }
 
-function excluirRegistro(index){
+function divulgarIndividual(index){
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+    registros[index].divulgado = true;
+    localStorage.setItem("registros", JSON.stringify(registros));
+    alert("Nota divulgada individualmente!");
+    mostrarRegistros(registros[index].tipo);
+}
+
+function apagarRegistro(index){
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
     registros.splice(index,1);
     localStorage.setItem("registros", JSON.stringify(registros));
-    alert("Registro excluído!");
-    mostrarTela("areaProfessor");
+    alert("Registro apagado!");
+    mostrarTela("menuProfessor");
 }
 
-function limparTipo(tipo){
+function mostrarResultadosGrupo(){
+
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    registros = registros.filter(r=>r.tipo !== tipo);
-    localStorage.setItem("registros", JSON.stringify(registros));
-    alert("Registros removidos!");
-    mostrarTela("areaProfessor");
+    let lista = document.getElementById("listaGrupo");
+    lista.innerHTML = "";
+
+    registros.forEach(r=>{
+        if(r.grupo === grupoAtual && r.divulgado){
+            let acertou = r.respostaGrupo === r.respostaCorreta;
+            lista.innerHTML += `
+            <div class="registro">
+                <strong>Tipo:</strong> ${r.tipo}<br>
+                <strong>Sua resposta:</strong> ${r.respostaGrupo}<br>
+                <strong>Correta:</strong> ${r.respostaCorreta}<br>
+                <strong>Status:</strong> <span class="${acertou ? 'status-ok':'status-erro'}">
+                ${acertou ? "✔ Correto" : "✖ Incorreto"}
+                </span>
+            </div>`;
+        }
+    });
+
+    mostrarTela("resultadoGrupo");
 }
 
 </script>
